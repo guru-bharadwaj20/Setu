@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "setu"
 
 include(":protocol")
+include(":routing")
