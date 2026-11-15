@@ -22,20 +22,3 @@ fun String.hexToBytes(): ByteArray {
 }
 
 fun sha256(data: ByteArray): ByteArray = MessageDigest.getInstance("SHA-256").digest(data)
-
-/**
- * 64-bit FNV-1a over `data`, optionally followed by one extra byte. Used for
- * bloom filter indices: `fnv1a64(id, i)` is the hash of `id || i`.
- */
-fun fnv1a64(data: ByteArray, extra: Int = -1): Long {
-    var h = -0x340d631b7bdddcdbL // 0xcbf29ce484222325 as a signed literal
-    for (b in data) {
-        h = h xor (b.toLong() and 0xff)
-        h *= 0x100000001b3L
-    }
-    if (extra >= 0) {
-        h = h xor (extra.toLong() and 0xff)
-        h *= 0x100000001b3L
-    }
-    return h
-}

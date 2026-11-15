@@ -61,9 +61,16 @@ kind 1 PACKET  payload = encoded packet
 kind 2 BYE     payload = empty
 ```
 
-Bloom filter: bit array of 32768 bits. For hash index `i` in `0..6`,
-`h_i = fnv1a64(id || i) mod 32768`, where `||` is byte concatenation and `i`
-is one byte.
+Bloom filter: bit array of 32768 bits, byte `k` bit `b` set means bit index
+`8k + b`. Because an id is already a SHA-256 prefix, no extra hash function is
+needed. For index `i` in `0..6`:
+
+```
+h_i = ((id[2i] << 8) | id[2i+1]) & 0x7fff
+```
+
+That is, the seven indices are the low 15 bits of the first seven big-endian
+16-bit words of the id.
 
 On receiving HELLO, a side sends every stored packet whose id is not in the
 peer's filter, highest priority first, then BYE. Priority: SOS > ACK > SAFE,

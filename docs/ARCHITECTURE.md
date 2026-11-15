@@ -57,8 +57,8 @@ on a laptop in milliseconds and reused by a LoRa bridge or a desktop gateway.
 
 - Packet id = first 16 bytes of SHA-256 over the signed body. Collision-free
   in practice, cheap.
-- Bloom filter: 4 KiB, 7 hashes, sized for about 4000 ids at under 1 % false
-  positives. A false positive means a packet is not re-sent to one neighbour,
+- Bloom filter: 4 KiB, 7 indices. At the 2000-packet store bound the false
+  positive rate is below 0.1 %; at 4000 ids it is about 2 %. A false positive means a packet is not re-sent to one neighbour,
   which is harmless because the next neighbour will carry it.
 - TTL: SOS 48 h, ACK 72 h, SAFE 24 h.
 - Max hops: 32. A hop is a transfer between two phones.
