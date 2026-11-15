@@ -4,7 +4,7 @@
 
 | Layer        | Choice                                          | Why                                                                 |
 |--------------|-------------------------------------------------|---------------------------------------------------------------------|
-| App          | Kotlin, Jetpack Compose, minSdk 24, target 35   | Covers more than 95 % of Android phones in India, including budget devices |
+| App          | Kotlin, Jetpack Compose, minSdk 24, target 36   | Covers more than 95 % of Android phones in India, including budget devices |
 | Radio        | Google Nearby Connections, `P2P_CLUSTER`        | Handles Bluetooth, BLE and Wi-Fi Direct without special hardware    |
 | Routing      | Epidemic store-and-forward, bloom filter, TTL   | Proven in delay-tolerant networking, needs no coordinator           |
 | Storage      | Room (SQLite), bounded queue                    | Survives reboots, tiny footprint                                    |

@@ -19,3 +19,4 @@ rootProject.name = "setu"
 include(":protocol")
 include(":routing")
 include(":sim")
+include(":app")

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Setu</string>
+    <string name="tagline">Offline SOS that hops phone to phone</string>
+
+    <string name="nav_sos">SOS</string>
+    <string name="nav_courier">Courier</string>
+    <string name="nav_status">Status</string>
+
+    <string name="sos_title">Send SOS</string>
+    <string name="sos_hint">Works without signal. Your location hops between nearby phones until one reaches the internet.</string>
+    <string name="sos_headcount">People with you</string>
+    <string name="sos_note">Note (optional, 40 characters)</string>
+    <string name="sos_send">SEND SOS</string>
+    <string name="sos_sending">Sending…</string>
+    <string name="sos_active">SOS active since %1$s</string>
+    <string name="sos_acked">Rescuers have your location</string>
+    <string name="sos_waiting">Waiting to reach a connected phone…</string>
+    <string name="sos_cancel">I am safe now</string>
+    <string name="sos_no_location">Location unavailable. Step outside or wait a moment.</string>
+    <string name="sos_your_code">Your code for family: %1$s</string>
+
+    <string name="need_water">Water</string>
+    <string name="need_food">Food</string>
+    <string name="need_medical">Medical</string>
+    <string name="need_trapped">Trapped</string>
+    <string name="need_evacuate">Evacuate</string>
+
+    <string name="courier_title">Courier mode</string>
+    <string name="courier_body">Carry other people\'s SOS messages until your phone sees the internet. Nothing to do, keep Bluetooth on.</string>
+    <string name="courier_on">Relaying for others</string>
+    <string name="courier_off">Relaying paused</string>
+    <string name="courier_battery_note">Radio slows down as battery drops. Below 5 %% relaying stops unless you have an SOS of your own.</string>
+
+    <string name="status_title">Mesh status</string>
+    <string name="status_stored">Packets stored</string>
+    <string name="status_sos">SOS carried</string>
+    <string name="status_peers">Phones met</string>
+    <string name="status_exchanges">Exchanges</string>
+    <string name="status_uploaded">Uploaded to relay</string>
+    <string name="status_last_upload">Last upload</string>
+    <string name="status_never">never</string>
+    <string name="status_radio">Radio</string>
+    <string name="status_duty">%1$ds on / %2$ds off</string>
+    <string name="status_relay_url">Relay URL</string>
+    <string name="status_identity">Device code</string>
+
+    <string name="perm_title">Permissions</string>
+    <string name="perm_body">Setu needs nearby devices and location to find phones around you and to put your position in the SOS.</string>
+    <string name="perm_grant">Grant</string>
+    <string name="battery_title">Keep Setu alive</string>
+    <string name="battery_body">Some phones stop background apps. Allow Setu to ignore battery optimisation so your SOS keeps moving.</string>
+    <string name="battery_allow">Allow</string>
+    <string name="battery_later">Later</string>
+
+    <string name="notif_channel">Mesh service</string>
+    <string name="notif_title">Setu is relaying</string>
+    <string name="notif_body">%1$d packets stored, %2$d SOS</string>
+    <string name="notif_acked_title">Rescuers have your location</string>
+    <string name="notif_acked_body">Your SOS reached the relay and was acknowledged.</string>
+</resources>
