@@ -1,0 +1,35 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!**/src/**/build/
+.kotlin/
+
+# Android
+*.apk
+*.aab
+*.ap_
+*.dex
+local.properties
+captures/
+.cxx/
+*.keystore
+*.jks
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Node / relay
+node_modules/
+.wrangler/
+dist/
+coverage/
+*.log
+
+# Secrets
+.env
+.env.*
+.dev.vars
