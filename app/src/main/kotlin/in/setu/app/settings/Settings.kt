@@ -22,6 +22,7 @@ class Settings(private val context: Context) {
     val relayUrl: Flow<String> = store.data.map { it[RELAY_URL] ?: DEFAULT_RELAY_URL }
     val activeSosIdHex: Flow<String?> = store.data.map { it[ACTIVE_SOS] }
     val activeSosSince: Flow<Long> = store.data.map { it[ACTIVE_SOS_SINCE] ?: 0L }
+    val sosAckedAt: Flow<Long> = store.data.map { it[SOS_ACKED_AT] ?: 0L }
     val lastUploadAt: Flow<Long> = store.data.map { it[LAST_UPLOAD] ?: 0L }
     val batteryPromptShown: Flow<Boolean> = store.data.map { it[BATTERY_PROMPT] ?: false }
 
@@ -29,14 +30,19 @@ class Settings(private val context: Context) {
     suspend fun setRelayUrl(url: String) = store.edit { it[RELAY_URL] = url.trim().trimEnd('/') }
     suspend fun setBatteryPromptShown() = store.edit { it[BATTERY_PROMPT] = true }
     suspend fun setLastUploadAt(epochSeconds: Long) = store.edit { it[LAST_UPLOAD] = epochSeconds }
+    suspend fun setSosAckedAt(epochSeconds: Long) = store.edit { it[SOS_ACKED_AT] = epochSeconds }
 
-    suspend fun setActiveSos(idHex: String?, since: Long) = store.edit {
+    /** Records a new or resent SOS. Pass null to clear the active SOS. */
+    suspend fun setActiveSos(idHex: String?, since: Long, lastSent: Long = since) = store.edit {
         if (idHex == null) {
             it.remove(ACTIVE_SOS)
             it.remove(ACTIVE_SOS_SINCE)
+            it.remove(SOS_LAST_SENT)
+            it.remove(SOS_ACKED_AT)
         } else {
             it[ACTIVE_SOS] = idHex
             it[ACTIVE_SOS_SINCE] = since
+            it[SOS_LAST_SENT] = lastSent
         }
     }
 
@@ -46,6 +52,8 @@ class Settings(private val context: Context) {
             relayUrl = it[RELAY_URL] ?: DEFAULT_RELAY_URL,
             activeSosIdHex = it[ACTIVE_SOS],
             activeSosSince = it[ACTIVE_SOS_SINCE] ?: 0L,
+            sosLastSentAt = it[SOS_LAST_SENT] ?: 0L,
+            sosAckedAt = it[SOS_ACKED_AT] ?: 0L,
         )
     }
 
@@ -54,7 +62,11 @@ class Settings(private val context: Context) {
         val relayUrl: String,
         val activeSosIdHex: String?,
         val activeSosSince: Long,
-    )
+        val sosLastSentAt: Long,
+        val sosAckedAt: Long,
+    ) {
+        val sosActive: Boolean get() = activeSosIdHex != null
+    }
 
     companion object {
         const val DEFAULT_RELAY_URL = "https://setu-relay.workers.dev"
@@ -62,6 +74,8 @@ class Settings(private val context: Context) {
         private val RELAY_URL = stringPreferencesKey("relay_url")
         private val ACTIVE_SOS = stringPreferencesKey("active_sos")
         private val ACTIVE_SOS_SINCE = longPreferencesKey("active_sos_since")
+        private val SOS_LAST_SENT = longPreferencesKey("sos_last_sent")
+        private val SOS_ACKED_AT = longPreferencesKey("sos_acked_at")
         private val LAST_UPLOAD = longPreferencesKey("last_upload")
         private val BATTERY_PROMPT = booleanPreferencesKey("battery_prompt")
     }

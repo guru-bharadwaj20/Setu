@@ -84,9 +84,13 @@ tolerated. A lookup shows every match.
 
 ## Relay HTTP
 
-`POST /v1/upload` with body `application/cbor`: a CBOR array of packets.
-Response: a CBOR array of ACK packets whose `ref` matches any uploaded SOS id,
-plus any ACK for the uploading phone's own origin.
+`POST /v1/upload` with body `application/cbor`: a CBOR array of byte strings,
+each one encoded packet (the outer `[body, sig, hops]` array as bytes). The
+optional `X-Setu-Origin` header carries the uploader's public key in hex.
+Response: `application/cbor`, a CBOR array of byte strings, each an encoded ACK
+packet whose `ref` matches any uploaded SOS id, plus any ACK for the uploading
+phone's own origin. Batches are at most 200 packets; the phone loops until the
+store is drained.
 
 Everything beyond the packet and the exchange is optional for a bridge. A LoRa
 node that only carries SOS packets and never ACKs is still a conforming node.
