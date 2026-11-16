@@ -1,0 +1,102 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "a7b5afd7d9a8a0b0f4db0521561d5ce5",
+    "entities": [
+      {
+        "tableName": "packets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idHex` TEXT NOT NULL, `type` INTEGER NOT NULL, `originHex` TEXT NOT NULL, `ts` INTEGER NOT NULL, `expiresAt` INTEGER NOT NULL, `hops` INTEGER NOT NULL, `wire` BLOB NOT NULL, `uploaded` INTEGER NOT NULL, PRIMARY KEY(`idHex`))",
+        "fields": [
+          {
+            "fieldPath": "idHex",
+            "columnName": "idHex",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originHex",
+            "columnName": "originHex",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ts",
+            "columnName": "ts",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expiresAt",
+            "columnName": "expiresAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hops",
+            "columnName": "hops",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wire",
+            "columnName": "wire",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uploaded",
+            "columnName": "uploaded",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "idHex"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_packets_type",
+            "unique": false,
+            "columnNames": [
+              "type"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_packets_type` ON `${TABLE_NAME}` (`type`)"
+          },
+          {
+            "name": "index_packets_expiresAt",
+            "unique": false,
+            "columnNames": [
+              "expiresAt"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_packets_expiresAt` ON `${TABLE_NAME}` (`expiresAt`)"
+          },
+          {
+            "name": "index_packets_originHex",
+            "unique": false,
+            "columnNames": [
+              "originHex"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_packets_originHex` ON `${TABLE_NAME}` (`originHex`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a7b5afd7d9a8a0b0f4db0521561d5ce5')"
+    ]
+  }
+}
