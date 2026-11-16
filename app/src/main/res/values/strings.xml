@@ -54,6 +54,7 @@
     <string name="battery_later">Later</string>
 
     <string name="notif_channel">Mesh service</string>
+    <string name="notif_channel_alerts">SOS alerts</string>
     <string name="notif_title">Setu is relaying</string>
     <string name="notif_body">%1$d packets stored, %2$d SOS</string>
     <string name="notif_acked_title">Rescuers have your location</string>
