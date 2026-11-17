@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    name: Signed APK and GitHub release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: "platforms;android-37.0 build-tools;36.0.0 platform-tools"
+
+      - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+
+      - name: Restore keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.SETU_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::SETU_KEYSTORE_BASE64 secret is not set"; exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/setu-release.jks"
+
+      - name: Test and build signed release
+        env:
+          SETU_KEYSTORE: ${{ runner.temp }}/setu-release.jks
+          SETU_KEYSTORE_PASSWORD: ${{ secrets.SETU_KEYSTORE_PASSWORD }}
+          SETU_KEY_ALIAS: setu
+          SETU_KEY_PASSWORD: ${{ secrets.SETU_KEYSTORE_PASSWORD }}
+        run: >
+          ./gradlew --no-daemon
+          :protocol:test :routing:test :app:testDebugUnitTest :app:assembleRelease
+
+      - name: Name and checksum the APK
+        id: apk
+        run: |
+          name="setu-${GITHUB_REF_NAME}.apk"
+          cp app/build/outputs/apk/release/app-release.apk "$name"
+          sha256sum "$name" > "$name.sha256"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Release notes from CHANGELOG
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" '
+            $0 ~ "^## \[" v "\]" { on = 1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "See CHANGELOG.md." > notes.md
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "$GITHUB_REF_NAME"
+          "${{ steps.apk.outputs.name }}" "${{ steps.apk.outputs.name }}.sha256"
+          --title "Setu $GITHUB_REF_NAME" --notes-file notes.md --verify-tag
+
+      - name: Remove keystore
+        if: always()
+        run: rm -f "$RUNNER_TEMP/setu-release.jks"
