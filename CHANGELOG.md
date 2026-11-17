@@ -8,7 +8,7 @@ All notable changes to this project are documented here. The format follows
 
 ## [0.1.0] - 2026-11-17
 
-First public release. Not yet field-tested on more than a handful of phones.
+First public release. Verified in unit tests, the simulator and a local relay end to end; not yet field-tested on real phones.
 
 ### Added
 
