@@ -32,6 +32,15 @@ class PacketCodecTest {
     }
 
     @Test
+    fun `zero zero means no position`() {
+        assertTrue(sos().hasPosition)
+        assertTrue(sos().copy(latE5 = 0).hasPosition)
+        val none = sos().copy(latE5 = 0, lonE5 = 0, accuracyM = 0)
+        assertEquals(false, none.hasPosition)
+        assertEquals(none, PacketCodec.decode(PacketCodec.encode(PacketCodec.create(none, me)), now).body)
+    }
+
+    @Test
     fun `body encoding is canonical and deterministic`() {
         val a = PacketCodec.encodeBody(sos())
         assertArrayEquals(a, PacketCodec.encodeBody(sos()))

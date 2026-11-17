@@ -59,7 +59,8 @@ export function filterList(list, { showAcked = true, showSafe = false } = {}) {
 export function toGeoJson(list) {
   return {
     type: "FeatureCollection",
-    features: list.map((s) => ({
+    // A null position is the protocol's "no fix"; those are listed, not plotted.
+    features: list.filter((s) => s.lat !== null && s.lon !== null).map((s) => ({
       type: "Feature",
       geometry: { type: "Point", coordinates: [s.lon, s.lat] },
       properties: { id: s.id, status: status(s), headcount: s.headcount },

@@ -20,7 +20,7 @@ because every relaying phone increments it.
 | 1   | origin | bytes(32)  | Ed25519 public key of the sender.                        |
 | 2   | type   | uint       | 0 = SOS, 1 = ACK, 2 = SAFE (sender reports they are safe)|
 | 3   | ts     | uint       | Unix seconds when created.                               |
-| 4   | lat    | int        | Latitude * 1e5 (about 1 m precision).                    |
+| 4   | lat    | int        | Latitude * 1e5 (about 1 m precision). See "No fix".      |
 | 5   | lon    | int        | Longitude * 1e5.                                         |
 | 6   | acc    | uint       | Accuracy in metres, 0 = unknown.                         |
 | 7   | head   | uint       | Headcount, 0..99.                                        |
@@ -32,6 +32,12 @@ because every relaying phone increments it.
 
 Keys must be encoded in ascending order with no duplicates (CBOR canonical
 form) so that the id is stable across implementations.
+
+**No fix.** A phone that has no location when the user presses SOS still
+sends at once, with `lat = lon = 0` and `acc = 0`. Receivers treat exactly
+(0, 0) as "position unknown": the relay reports `lat`/`lon` as null and the map
+lists the request without plotting it. Nobody needs rescuing at Null Island,
+which is open sea. Resends pick up a fix as soon as one exists.
 
 ## Id
 

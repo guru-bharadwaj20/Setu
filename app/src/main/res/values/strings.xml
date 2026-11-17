@@ -17,7 +17,7 @@
     <string name="sos_acked">Rescuers have your location</string>
     <string name="sos_waiting">Waiting to reach a connected phone…</string>
     <string name="sos_cancel">I am safe now</string>
-    <string name="sos_no_location">Location unavailable. Step outside or wait a moment.</string>
+    <string name="sos_no_location">Sent without your location. Step outside if you can; Setu adds it on the next resend.</string>
     <string name="sos_your_code">Your code for family: %1$s</string>
 
     <string name="need_water">Water</string>

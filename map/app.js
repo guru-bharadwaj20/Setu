@@ -61,7 +61,7 @@ function describe(s) {
     el("div", { class: "row1" }, el("span", {}, `${s.code} · ${s.headcount} ${s.headcount === 1 ? "person" : "people"}`), el("span", { class: `status-${status(s)}` }, status(s))),
     needs.length ? el("div", { class: "needs" }, needs.join(", ")) : null,
     s.note ? el("div", { class: "note" }, `“${s.note}”`) : null,
-    el("div", { class: "muted" }, `${ago(s.ts, state.now)} · ±${s.accuracyM} m · battery ${s.battery}% · ${s.hops} hops`),
+    el("div", { class: "muted" }, `${ago(s.ts, state.now)} · ${s.lat === null ? "no location yet" : `±${s.accuracyM} m`} · battery ${s.battery}% · ${s.hops} hops`),
   ];
   return bits;
 }
@@ -103,7 +103,7 @@ function popupFor(s) {
 }
 
 function focus(s) {
-  if (!state.map) return;
+  if (!state.map || s.lat === null) return;
   state.map.flyTo({ center: [s.lon, s.lat], zoom: Math.max(state.map.getZoom(), 15) });
   state.popup?.remove();
   state.popup = new state.ml.Popup({ maxWidth: "280px" }).setLngLat([s.lon, s.lat]).setDOMContent(popupFor(s)).addTo(state.map);
@@ -179,7 +179,7 @@ async function lookup(raw) {
         el("div", { class: "match" },
           el("div", { class: `status-${status(m)}` }, words[status(m)]),
           el("div", {}, `${m.headcount} ${m.headcount === 1 ? "person" : "people"} · sent ${ago(m.ts, state.now)}`),
-          el("div", { class: "muted" }, `Near ${m.lat.toFixed(2)}, ${m.lon.toFixed(2)}`),
+          el("div", { class: "muted" }, m.lat === null ? "Their phone had no location fix yet." : `Near ${m.lat.toFixed(2)}, ${m.lon.toFixed(2)}`),
         ),
       ),
     );
@@ -313,7 +313,8 @@ function fitOnce() {
   if (fitted || !state.map || state.list.length === 0) return;
   fitted = true;
   const b = new state.ml.LngLatBounds();
-  for (const s of state.list) b.extend([s.lon, s.lat]);
+  for (const s of state.list) if (s.lat !== null) b.extend([s.lon, s.lat]);
+  if (b.isEmpty()) { fitted = false; return; }
   state.map.fitBounds(b, { padding: 60, maxZoom: 14, duration: 0 });
 }
 

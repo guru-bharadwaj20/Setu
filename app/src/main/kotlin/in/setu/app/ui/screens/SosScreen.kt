@@ -160,6 +160,13 @@ private fun ActiveSos(state: SosUiState, onSafe: () -> Unit) {
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onPrimary,
             )
+            if (state.noLocation && !state.acked) {
+                Text(
+                    stringResource(R.string.sos_no_location),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+            }
         }
     }
     state.error?.let { Text(it, color = MaterialTheme.colorScheme.error) }

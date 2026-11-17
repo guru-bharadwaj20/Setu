@@ -45,6 +45,7 @@ describe("export", () => {
     const g = toGeoJson([mk({})]);
     expect(g.features[0].geometry.coordinates).toEqual([77.59, 12.97]);
     expect(g.features[0].properties.status).toBe("waiting");
+    expect(toGeoJson([mk({ lat: null, lon: null })]).features).toHaveLength(0);
   });
 
   it("writes CSV that survives commas, quotes and formula injection", () => {

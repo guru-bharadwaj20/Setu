@@ -135,6 +135,11 @@ async function upload(req: Request, d: Deps): Promise<Response> {
   });
 }
 
+/** (0, 0) is the "no fix" position, docs/PROTOCOL.md. */
+function located(v: SosView): boolean {
+  return v.latE5 !== 0 || v.lonE5 !== 0;
+}
+
 function publicView(v: SosView) {
   return {
     id: v.id,
@@ -142,8 +147,8 @@ function publicView(v: SosView) {
     ts: v.ts,
     receivedAt: v.receivedAt,
     expiresAt: v.expiresAt,
-    lat: v.latE5 / 1e5,
-    lon: v.lonE5 / 1e5,
+    lat: located(v) ? v.latE5 / 1e5 : null,
+    lon: located(v) ? v.lonE5 / 1e5 : null,
     accuracyM: v.accM,
     headcount: v.headcount,
     needs: v.needs,
@@ -167,8 +172,8 @@ function familyView(v: SosView) {
   return {
     code: display(v.code),
     ts: v.ts,
-    lat: Math.round(v.latE5 / 1000) / 100,
-    lon: Math.round(v.lonE5 / 1000) / 100,
+    lat: located(v) ? Math.round(v.latE5 / 1000) / 100 : null,
+    lon: located(v) ? Math.round(v.lonE5 / 1000) / 100 : null,
     headcount: v.headcount,
     acked: v.acked,
     safe: v.safe,

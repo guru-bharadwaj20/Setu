@@ -112,6 +112,19 @@ describe("GET /v1/sos", () => {
   });
 });
 
+describe("no fix", () => {
+  it("reports an SOS at exactly (0, 0) without a position", async () => {
+    const h = await harness();
+    const s = await signer(1);
+    await h.call("POST", "/v1/upload", { body: batch([encode(await sos(s, { latE5: 0, lonE5: 0, accuracyM: 0 }))]) });
+    const j = (await (await h.call("GET", "/v1/sos")).json()) as { sos: Array<{ lat: number | null; lon: number | null }> };
+    expect(j.sos[0]).toMatchObject({ lat: null, lon: null });
+    const code = [...h.store.rows.values()][0]!.code;
+    const f = (await (await h.call("GET", `/v1/lookup/${code}`)).json()) as { matches: Array<{ lat: number | null }> };
+    expect(f.matches[0]!.lat).toBeNull();
+  });
+});
+
 describe("POST /v1/ack", () => {
   it("needs the token, needs a stored SOS and is idempotent", async () => {
     const h = await harness();

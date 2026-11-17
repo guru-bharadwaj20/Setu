@@ -41,12 +41,15 @@ data class SosUiState(
     val sending: Boolean = false,
     val shortCode: String = "",
     val error: String? = null,
+    /** The SOS went out without a position; the next resend will add one if it can. */
+    val noLocation: Boolean = false,
 )
 
 class SosViewModel(private val g: Graph) : ViewModel() {
     private val sending = MutableStateFlow(false)
     private val error = MutableStateFlow<String?>(null)
     private val shortCode = MutableStateFlow("")
+    private val noLocation = MutableStateFlow(false)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -55,7 +58,7 @@ class SosViewModel(private val g: Graph) : ViewModel() {
     }
 
     val state: StateFlow<SosUiState> = combine<Any?, SosUiState>(
-        g.settings.activeSosIdHex, g.settings.activeSosSince, g.settings.sosAckedAt, sending, error, shortCode,
+        g.settings.activeSosIdHex, g.settings.activeSosSince, g.settings.sosAckedAt, sending, error, shortCode, noLocation,
     ) { v ->
         SosUiState(
             active = v[0] != null,
@@ -64,6 +67,7 @@ class SosViewModel(private val g: Graph) : ViewModel() {
             sending = v[3] as Boolean,
             shortCode = v[5] as String,
             error = v[4] as String?,
+            noLocation = v[0] != null && v[6] as Boolean,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SosUiState())
 
@@ -73,7 +77,8 @@ class SosViewModel(private val g: Graph) : ViewModel() {
         error.value = null
         viewModelScope.launch {
             try {
-                g.sos.send(SosInput(headcount, needs, note))
+                val p = g.sos.send(SosInput(headcount, needs, note))
+                noLocation.value = !p.body.hasPosition
                 MeshService.start(g.context)
             } catch (e: Exception) {
                 error.value = e.message ?: e.javaClass.simpleName

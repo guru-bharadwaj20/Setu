@@ -114,6 +114,9 @@ data class PacketBody(
         }
     }
 
+    /** False for the (0, 0) "no fix" position, docs/PROTOCOL.md "No fix". */
+    val hasPosition: Boolean get() = latE5 != 0 || lonE5 != 0
+
     val lat: Double get() = latE5 / 1e5
     val lon: Double get() = lonE5 / 1e5
     val expiresAt: Long get() = ts + ttl
