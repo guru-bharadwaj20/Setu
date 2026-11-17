@@ -1,0 +1,11 @@
+Setu
+Copyright 2026 Guru R Bharadwaj
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+Documentation in docs/ is also available under Creative Commons
+Attribution 4.0 International (CC BY 4.0).
+
+This product includes software developed by third parties:
+  - net.i2p.crypto:eddsa (CC0 1.0), Ed25519 signatures on Android
+  - MapLibre GL JS (BSD-3-Clause), loaded by the rescuer map from a CDN
+  - Map data (c) OpenStreetMap contributors (ODbL), shown by the rescuer map
