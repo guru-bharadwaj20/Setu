@@ -1,0 +1,28 @@
+name: Field test report
+description: Share numbers from a drill run with docs/FIELD_TEST.md.
+labels: [field-test]
+body:
+  - type: input
+    id: where
+    attributes:
+      label: Setting
+      placeholder: "Campus, 12 phones, 400 m x 300 m"
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Results
+      description: Delivery ratio, median delivery time, hop counts and mAh per hour from the drill sheet.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: devices
+    attributes:
+      label: Phones used
+      description: Models, Android versions and any phones that stopped relaying in the background.
+  - type: textarea
+    id: notes
+    attributes:
+      label: What surprised you?

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/guru-bharadwaj20/Setu/security/advisories/new
+    about: Please report vulnerabilities privately, not as a public issue.
+  - name: In a real emergency
+    url: https://ndma.gov.in/
+    about: Setu is experimental. Call 112 in India, or your local emergency number.

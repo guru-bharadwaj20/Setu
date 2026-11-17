@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest something that would help people in a disaster or the rescuers reaching them.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Who has this problem, and when?
+      description: Describe the situation on the ground, not the solution yet.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would help?
+    validations:
+      required: true
+  - type: textarea
+    id: cost
+    attributes:
+      label: Cost to battery, packet size or privacy
+      description: Every byte and every radio wake-up costs someone battery. Say what this one costs.

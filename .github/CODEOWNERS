@@ -1,0 +1,7 @@
+# Every change needs a review from the maintainer.
+* @guru-bharadwaj20
+
+# Wire format changes affect every phone in the field.
+/protocol/ @guru-bharadwaj20
+/docs/PROTOCOL.md @guru-bharadwaj20
+/docs/vectors/ @guru-bharadwaj20
