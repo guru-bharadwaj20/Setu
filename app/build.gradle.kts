@@ -17,8 +17,23 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    // Release signing comes from the environment (CI secrets), never from the
+    // repository. Without it, assembleRelease still works and leaves the APK unsigned.
+    val keystore = System.getenv("SETU_KEYSTORE")?.let { file(it) }?.takeIf { it.isFile }
+    signingConfigs {
+        if (keystore != null) {
+            create("release") {
+                storeFile = keystore
+                storePassword = System.getenv("SETU_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("SETU_KEY_ALIAS") ?: "setu"
+                keyPassword = System.getenv("SETU_KEY_PASSWORD") ?: System.getenv("SETU_KEYSTORE_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
