@@ -2,7 +2,7 @@ import type { Bytes } from "../src/cbor";
 import { PacketType, type PacketBody, type Signer, create, encode, fromHex, signerFromSeed, type Packet } from "../src/packet";
 import { CborWriter } from "../src/cbor";
 import { MemoryStore } from "../src/store";
-import { type Deps, handle } from "../src/index";
+import { type Deps, handle } from "../src/app";
 
 export const NOW = 1_800_000_000;
 
