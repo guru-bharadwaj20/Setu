@@ -15,4 +15,6 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    systemProperty("setu.vectors", rootProject.file("docs/vectors").absolutePath)
+    inputs.dir(rootProject.file("docs/vectors"))
 }
