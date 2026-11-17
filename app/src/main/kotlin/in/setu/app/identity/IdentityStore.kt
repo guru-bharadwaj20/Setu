@@ -5,6 +5,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
 import `in`.setu.protocol.Identity
+import androidx.core.content.edit
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -32,7 +33,7 @@ class IdentityStore(context: Context) {
 
     private fun create(): Identity {
         val id = Identity.generate()
-        prefs.edit().putString(KEY_SEED, Base64.encodeToString(wrap(id.seed), Base64.NO_WRAP)).apply()
+        prefs.edit { putString(KEY_SEED, Base64.encodeToString(wrap(id.seed), Base64.NO_WRAP)) }
         return id
     }
 

@@ -1,10 +1,10 @@
 package `in`.setu.app.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import androidx.core.net.toUri
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -94,7 +94,7 @@ private fun SetuApp() {
                 g.scope.launch { g.settings.setBatteryPromptShown() }
                 @Suppress("BatteryLife")
                 context.startActivity(
-                    Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:${context.packageName}"))
+                    Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, "package:${context.packageName}".toUri())
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                 )
             },

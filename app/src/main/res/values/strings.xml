@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Setu</string>
-    <string name="tagline">Offline SOS that hops phone to phone</string>
 
     <string name="nav_sos">SOS</string>
     <string name="nav_courier">Courier</string>
@@ -56,7 +55,10 @@
     <string name="notif_channel">Mesh service</string>
     <string name="notif_channel_alerts">SOS alerts</string>
     <string name="notif_title">Setu is relaying</string>
-    <string name="notif_body">%1$d packets stored, %2$d SOS</string>
+    <plurals name="notif_body">
+        <item quantity="one">%1$d packet stored, %2$d SOS</item>
+        <item quantity="other">%1$d packets stored, %2$d SOS</item>
+    </plurals>
     <string name="notif_acked_title">Rescuers have your location</string>
     <string name="notif_acked_body">Your SOS reached the relay and was acknowledged.</string>
 </resources>

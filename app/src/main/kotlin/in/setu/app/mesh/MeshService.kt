@@ -147,7 +147,7 @@ class MeshService : LifecycleService() {
         return NotificationCompat.Builder(this, CHANNEL_MESH)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(getString(R.string.notif_title))
-            .setContentText(getString(R.string.notif_body, total, sos))
+            .setContentText(resources.getQuantityString(R.plurals.notif_body, total, total, sos))
             .setContentIntent(open)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
