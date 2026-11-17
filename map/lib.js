@@ -91,9 +91,25 @@ export function normaliseCode(input) {
   return /^[0-9A-HJKMNP-TV-Z]{6}$/.test(c) ? c : null;
 }
 
-/** Relay base URL from ?relay=, else the page's own origin. Trailing slashes dropped. */
+/** The http(s) origin of a URL, or null for anything else. */
+export function relayOrigin(url) {
+  try {
+    const u = new URL(url);
+    return u.protocol === "https:" || u.protocol === "http:" ? u.origin : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Relay origin from ?relay=, else the page's own origin. */
 export function relayBase(search, origin) {
-  const q = new URLSearchParams(search).get("relay");
-  const base = q && /^https?:\/\//.test(q) ? q : origin;
-  return base.replace(/\/+$/, "");
+  return relayOrigin(new URLSearchParams(search).get("relay") ?? "") ?? origin.replace(/\/+$/, "");
+}
+
+/**
+ * The rescuer token, but only for the relay it was saved for. A shared link
+ * with ?relay= pointing elsewhere must never receive the token.
+ */
+export function tokenFor(relay, token, tokenRelay) {
+  return token && tokenRelay && relayOrigin(relay) === tokenRelay ? token : "";
 }

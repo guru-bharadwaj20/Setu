@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ago, filterList, needsLabels, normaliseCode, relayBase, status, toCsv, toGeoJson, triage } from "../lib.js";
+import { ago, filterList, needsLabels, normaliseCode, relayBase, relayOrigin, status, tokenFor, toCsv, toGeoJson, triage } from "../lib.js";
 
 const base = { id: "a", code: "ABC-DEF", lat: 12.97, lon: 77.59, accuracyM: 10, headcount: 1, needs: 0, battery: 50, hops: 1, ts: 1000, note: null, acked: false, safe: false };
 const mk = (over) => ({ ...base, ...over });
@@ -70,5 +70,15 @@ describe("input", () => {
     expect(relayBase("?relay=https://relay.example/", "https://map.example")).toBe("https://relay.example");
     expect(relayBase("", "https://map.example")).toBe("https://map.example");
     expect(relayBase("?relay=javascript:alert(1)", "https://map.example")).toBe("https://map.example");
+    expect(relayBase("?relay=https://relay.example/v1/../x?y", "https://map.example")).toBe("https://relay.example");
+  });
+
+  it("only hands the rescuer token to the relay it was saved for", () => {
+    const saved = relayOrigin("https://relay.example");
+    expect(tokenFor("https://relay.example", "t0k", saved)).toBe("t0k");
+    expect(tokenFor("https://evil.example", "t0k", saved)).toBe("");
+    expect(tokenFor("https://relay.example.evil.example", "t0k", saved)).toBe("");
+    expect(tokenFor("https://relay.example", "t0k", null)).toBe("");
+    expect(relayOrigin("ftp://relay.example")).toBeNull();
   });
 });

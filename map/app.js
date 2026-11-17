@@ -2,7 +2,7 @@
 // token mark someone reached, and lets families look up a short code.
 // Everything user supplied is written with textContent, never innerHTML.
 
-import { ago, filterList, needsLabels, normaliseCode, relayBase, status, toCsv, toGeoJson, triage } from "./lib.js";
+import { ago, filterList, needsLabels, normaliseCode, relayBase, relayOrigin, status, toCsv, toGeoJson, tokenFor, triage } from "./lib.js";
 
 const POLL_MS = 30_000;
 const COLORS = { waiting: "#c62828", acked: "#e08a00", safe: "#2e7d32" };
@@ -21,8 +21,10 @@ function store(key, value) {
 }
 
 const state = {
-  relay: store("setu.relay") || relayBase(location.search, location.origin),
+  relay: relayOrigin(store("setu.relay") ?? "") ?? relayBase(location.search, location.origin),
   token: store("setu.token") || "",
+  // Origin the token was entered for. The token is never sent anywhere else.
+  tokenRelay: store("setu.tokenRelay"),
   list: [],
   now: Math.floor(Date.now() / 1000),
   showAcked: true,
@@ -127,17 +129,18 @@ async function refresh() {
 }
 
 async function markReached(s, btn) {
-  if (!state.token) {
+  const token = tokenFor(state.relay, state.token, state.tokenRelay);
+  if (!token) {
     showTab("settings");
-    banner("Set the rescuer token in Settings first.");
+    banner(`Enter the rescuer token for ${state.relay} in Settings first.`);
     return;
   }
   btn.disabled = true;
   btn.textContent = "Sending…";
   try {
-    const res = await fetch(`${state.relay}/v1/ack`, {
+    const res = await fetch(`${state.tokenRelay}/v1/ack`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${state.token}` },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({ id: s.id }),
     });
     if (res.status === 401) throw new Error("token rejected");
@@ -218,14 +221,19 @@ function wire() {
   );
   $("lookup").addEventListener("submit", (e) => { e.preventDefault(); lookup($("code").value); });
   $("relay").value = state.relay;
-  $("token").value = state.token;
+  // Do not pre-fill the token for a relay it was not saved for, or one click on
+  // Save after following a crafted ?relay= link would hand it over.
+  $("token").value = tokenFor(state.relay, state.token, state.tokenRelay);
   $("save-settings").addEventListener("click", () => {
-    const r = $("relay").value.trim().replace(/\/+$/, "");
-    if (r && !/^https?:\/\//.test(r)) { banner("The relay URL must start with https://"); return; }
+    const typed = $("relay").value.trim();
+    const r = typed ? relayOrigin(typed) : "";
+    if (r === null) { banner("The relay URL must start with https://"); return; }
     state.relay = r || relayBase(location.search, location.origin);
     state.token = $("token").value.trim();
+    state.tokenRelay = state.token ? state.relay : "";
     store("setu.relay", r);
     store("setu.token", state.token);
+    store("setu.tokenRelay", state.tokenRelay);
     banner("");
     refresh();
   });
