@@ -1,0 +1,14 @@
+{
+  "name": "setu-map",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static rescuer map and family lookup for the Setu relay",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "serve": "npx --yes serve@14.2.6 -l 8080 ."
+  },
+  "devDependencies": {
+    "vitest": "5.1.0"
+  }
+}
