@@ -1,0 +1,22 @@
+name = "setu-relay"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+
+# Create the database once with `wrangler d1 create setu`, paste its id here,
+# then run `npm run db:migrate`.
+[[d1_databases]]
+binding = "DB"
+database_name = "setu"
+database_id = "replace-with-your-d1-id"
+
+# Hourly purge of expired packets and stale rate-limit rows.
+[triggers]
+crons = ["0 * * * *"]
+
+[vars]
+# Uploads per minute per uploader (public key, or IP when no key is sent).
+RATE_LIMIT_PER_MINUTE = "60"
+
+# Secrets, set with `wrangler secret put <NAME>`:
+#   RELAY_SEED     32-byte hex Ed25519 seed used to sign ACK packets
+#   RESCUER_TOKEN  shared bearer token for POST /v1/ack

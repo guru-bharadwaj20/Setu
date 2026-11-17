@@ -1,0 +1,21 @@
+{
+  "name": "setu-relay",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cloudflare Worker that receives Setu SOS packets from connected phones and hands back acknowledgements",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:migrate": "wrangler d1 execute setu --remote --file=schema.sql",
+    "db:migrate:local": "wrangler d1 execute setu --local --file=schema.sql",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261117.1",
+    "typescript": "6.0.3",
+    "vitest": "5.1.0",
+    "wrangler": "4.163.0"
+  }
+}
