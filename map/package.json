@@ -9,6 +9,6 @@
     "serve": "npx --yes serve@14.2.6 -l 8080 ."
   },
   "devDependencies": {
-    "vitest": "5.1.0"
+    "vitest": "5.1.1"
   }
 }
